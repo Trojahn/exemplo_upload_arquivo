@@ -1,26 +1,17 @@
 import { useEffect, useState } from 'react'
-// import reactLogo from '/assets/react.svg'
-// import viteLogo from '/vite.svg'
-
-
-
-
 
 function App() {
 
-  const url = "http://localhost:8000";
+  const url = "http://localhost:3000/arquivo";
 
   const [data, setData] = useState([]);
-  // Usado para guardar os nomes dos campos.
-  const [inp, setInput] = useState({
-    login: "",
-    foto: ""
-  });
+
   // Usado para guardar o arquivo a ser enviado.
   const [arquivo, setArquivo] = useState(null);
+  const [inp, setInput] = useState("");
 
   async function carregarDados() {
-    const res = await fetch(`${url}/perfil`);
+    const res = await fetch(`${url}`);
     const json = await res.json();
     setData(json);
   }
@@ -33,26 +24,21 @@ function App() {
     if (e) {
       e.preventDefault();
     }
-
-    setInput({
-      login: "",
-      foto: ""
-    });
+    setInput("");
     setArquivo(null);
   }
 
-  async function atualizarForm(e) {
-    setInput({ ...inp, [e.target.name]: e.target.value });
+  function atualizarForm(e) {
+    setInput(e.target.value);
   }
 
   async function cadastrar(e) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("login", inp.login);
-    formData.append("foto", arquivo);
+    formData.append("arquivo", arquivo);
 
-    let res = await fetch(`${url}/perfil`, { method: "POST", body: formData });
+    let res = await fetch(`${url}`, { method: "POST", body: formData });
     if (!res.ok) {
       alert("Não foi possível realizar o cadastro");
       return;
@@ -67,40 +53,25 @@ function App() {
       // Guarda os dados do arquivo.
       setArquivo(e.target.files[0]);
       // Guarda o nome do arquivo.
-      setInput({ ...inp, [e.target.name]: e.target.files[0].name });
+      setInput(e.target.files[0].name);
     }
   }
 
-  let perfis = [];
+  let fotos = [];
   if (data.length > 0) {
-    for (let perfil of data) {
-      let img;
-      if (perfil.foto) {
-        img = `${url}/foto/${perfil.foto}`;
-      } else {
-        img = "https://placehold.co/300x200?text=Sem+Imagem";
-      }
-
+    for (let arquivo of data) {
       let item = (
-        <div className="box my-5" data-id={perfil.id} key={perfil.id}>
+        <div className="box my-5" data-id={arquivo.id} key={arquivo.id}>
           <article className="media">
             <div className="media-left">
               <figure className="image is-300x200">
-                <img src={img} alt="Image" />
+                <img src={`${url}/${arquivo.id}`} alt="Image" />
               </figure>
-            </div>
-            <div className="media-content">
-              <div className="content">
-                <h4>{perfil.id}</h4>
-                <p>
-                  {perfil.login}
-                </p>
-              </div>
             </div>
           </article>
         </div>
       );
-      perfis.push(item);
+      fotos.push(item);
     }
   }
 
@@ -124,14 +95,9 @@ function App() {
           </div>
           <div className='column my-5'>
             <form onSubmit={cadastrar}>
-              <div className="field">
-                <label className="label">Login</label>
-                <div className="control">
-                  <input className="input" type="text" placeholder="Login" required name="login" onChange={atualizarForm} value={inp.login} />
-                </div>
-              </div>
 
               <div className="field">
+                <label className="label">Envie sua imagem</label>
                 <div className="file has-name is-fullwidth">
                   <label className="file-label">
                     <input className="file-input" type="file" name="foto" accept="image/*" onChange={changeFile} />
@@ -155,8 +121,8 @@ function App() {
                 </div>
               </div>
             </form>
-            <h2 className='subtitle has-text-centered'>Perfis cadastrados</h2>
-            {perfis}
+            <h2 className='subtitle has-text-centered'>Imagens cadastradas</h2>
+            {fotos}
           </div>
           <div className='column is-1'>
 

@@ -5,13 +5,12 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-5555}:5173"
+      - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules # Evita conflito com node_modules local (container-only)
+      - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true # Necessário em ambientes como Windows/WSL2
-      - VITE_ALLOWED_HOST=${VITE_ALLOWED_HOST}
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - node
     networks:
@@ -24,10 +23,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend:/usr/src/app
-      - ./backend/data:/usr/src/app/data
+      - ./backend/uploads:/usr/src/app/uploads
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=development
+    ports:
+      - "3000:3000"
     networks:
       - rede
 
