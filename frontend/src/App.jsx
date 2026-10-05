@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 function App() {
-
   const url = "http://localhost:3000/arquivo";
 
   const [data, setData] = useState([]);
@@ -28,10 +27,6 @@ function App() {
     setArquivo(null);
   }
 
-  function atualizarForm(e) {
-    setInput(e.target.value);
-  }
-
   async function cadastrar(e) {
     e.preventDefault();
 
@@ -40,7 +35,8 @@ function App() {
 
     let res = await fetch(`${url}`, { method: "POST", body: formData });
     if (!res.ok) {
-      alert("Não foi possível realizar o cadastro");
+      const json = await res.json();
+      alert(`Erro: ${json.msg}`);
       return;
     }
     alert("Cadastrado com sucesso!");
@@ -75,11 +71,8 @@ function App() {
     }
   }
 
-
   return (
     <>
-
-
       <header>
         <section className="hero is-success">
           <div className="hero-body">
@@ -89,59 +82,54 @@ function App() {
         </section>
       </header>
       <main>
-        <section className='columns'>
-          <div className='column is-1'>
-
-          </div>
-          <div className='column my-5'>
+        <section className="columns">
+          <div className="column is-1"></div>
+          <div className="column my-5">
             <form onSubmit={cadastrar}>
-
               <div className="field">
                 <label className="label">Envie sua imagem</label>
                 <div className="file has-name is-fullwidth">
                   <label className="file-label">
-                    <input className="file-input" type="file" name="foto" accept="image/*" onChange={changeFile} />
+                    <input
+                      className="file-input"
+                      type="file"
+                      name="foto"
+                      accept="image/*"
+                      onChange={changeFile}
+                    />
                     <span className="file-cta">
                       <span className="file-icon">
                         <i className="fas fa-upload"></i>
                       </span>
                       <span className="file-label">Escolha uma foto</span>
                     </span>
-                    <span className="file-name">{inp.foto}</span>
+                    <span className="file-name">{inp}</span>
                   </label>
                 </div>
               </div>
 
               <div className="field is-grouped">
                 <div className="control">
-                  <button className="button is-link">Enviar</button>
+                  <button className="button is-link" disabled={arquivo === null}>Enviar</button>
                 </div>
                 <div className="control">
-                  <button className="button is-link is-light" onClick={resetForm}>Limpar</button>
+                  <button
+                    className="button is-link is-light"
+                    onClick={resetForm}
+                  >
+                    Limpar
+                  </button>
                 </div>
               </div>
             </form>
-            <h2 className='subtitle has-text-centered'>Imagens cadastradas</h2>
+            <h2 className="subtitle has-text-centered">Imagens cadastradas</h2>
             {fotos}
           </div>
-          <div className='column is-1'>
-
-          </div>
+          <div className="column is-1"></div>
         </section>
-
       </main>
-
-
-
-
-
-
-
-
-
-
     </>
-  )
+  );
 }
 
-export default App
+export default App;

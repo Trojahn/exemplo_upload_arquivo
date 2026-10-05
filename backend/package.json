@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend usado para receber, cadastrar em um banco de dados, e retornar arquivos de imagem conforme requisitado pelo frontend",
+  "description": "Sistema de exemplo de upload de arquivos de imagem",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
